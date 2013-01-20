@@ -1,7 +1,6 @@
 package org.ch.mm.xmltransform;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
@@ -9,7 +8,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -18,17 +16,19 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.EtchedBorder;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 
 public class Main implements ActionListener {
 	
 	final static String outFileName="result.csv";
 	final static String xslFileName="FragebogenTransformation.xsl";
-	final static String columnNames ="Dateiname,Frage1,Frage2,Frage3,Frage4,Frage5,Frage6,Frage7,Frage8,Frage9,Frage10,Frage11"; 
+	String columnNames = null; //"Dateiname,Frage1,Frage2,Frage3,Frage4,Frage5,Frage6,Frage7,Frage8,Frage9,Frage10,Frage11"; 
 			
 	int width = 800;
 	int height = 600;
@@ -48,6 +48,7 @@ public class Main implements ActionListener {
 	public static void main(String[] args) throws Exception {
 		Main main = new Main();
 		main.start();
+		
 	}
 	
 	private File selectSourceFolder(){
@@ -88,8 +89,6 @@ public class Main implements ActionListener {
 		
 		JPanel footerPanel = new JPanel();
 		footerPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
-//		footerPanel.setLayout(new BoxLayout(footerPanel,BoxLayout.X_AXIS));
-//		footerPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		
 		startButton = new JButton("Transformation starten");
 		startButton.setActionCommand(CMD_START);
@@ -119,6 +118,9 @@ public class Main implements ActionListener {
 		if(CMD_SELECT_SRC_FOLDER.equals(cmd)){
 			srcFolder = selectSourceFolder();
 			log("\nGewähltes Quellverzeichnis: "+ srcFolder.getAbsolutePath());
+			
+			//resetting columnNames;
+			columnNames = null;
 			startButton.setEnabled(true);
 			
 		}else if(CMD_START.equals(cmd)){
@@ -144,18 +146,17 @@ public class Main implements ActionListener {
 				if(files.length > 0){
 					File outFile = new File(srcFolder,outFileName);
 					PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(outFile)));
-					writer.println(columnNames);
 							
-					TransformerFactory transformerFactory = TransformerFactory.newInstance();
-					
-					StreamSource xsl = new StreamSource(this.getClass().getResourceAsStream(xslFileName));
-					Transformer xsltTransformer = transformerFactory.newTransformer(xsl);
-					
 					for(File file: files){
-						writer.print(file.getName()+",");
-						xsltTransformer.transform(new StreamSource(file),new StreamResult(writer));
-						writer.println();
 						log("Verarbeite Datei '"+file.getAbsolutePath()+"'");
+						
+						if(columnNames == null){
+							columnNames = calculateHeader(file);
+							writer.println(columnNames);
+						}
+
+						String textValues = calculateValues(file);						
+						writer.println(textValues);
 					}
 					writer.flush();
 					writer.close();
@@ -173,15 +174,79 @@ public class Main implements ActionListener {
 		}catch(Exception ex){
 			log("Ein Fehler ist aufgetreten: ");
 			log(ex.getMessage());
+			ex.printStackTrace();
 		}
 		
 		
 	}
+	
+	private String calculateHeader(File xmlDoc) throws Exception{
+		StringBuffer bf = new StringBuffer("Dateiname");
 
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder parser = factory.newDocumentBuilder();
+		Document doc = parser.parse(xmlDoc);
+		
+		Node rootNode = doc.getFirstChild();
+		
+		NodeList children = rootNode.getChildNodes();
+
+		if(children.getLength() > 0 ){
+			for(int i=0; i< children.getLength();i++){
+				Node childNode = children.item(i);
+				if(childNode.getNodeType() == Node.ELEMENT_NODE){
+					bf.append(",");
+					bf.append(childNode.getNodeName());	
+				}
+			} 
+		}
+		
+		String result = bf.toString();
+		log("\nIdentifizierte Spaltennamen:");
+		log(result+"\n");
+		
+	    return result;
+	}
+
+	private String calculateValues(File xmlDoc) throws Exception{
+		StringBuffer bf = new StringBuffer();
+
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder parser = factory.newDocumentBuilder();
+		Document doc = parser.parse(xmlDoc);
+		
+		Node rootNode = doc.getFirstChild();
+		
+		NodeList children = rootNode.getChildNodes();
+		
+		if(children.getLength() > 0 ){
+			
+			bf.append(xmlDoc.getName());
+			
+			for(int i=0; i< children.getLength();i++){
+				Node childNode = children.item(i);
+				if(childNode.getNodeType() == Node.ELEMENT_NODE){
+					bf.append(",");
+					
+					Node textNode = childNode.getFirstChild();
+					if(textNode != null){
+						bf.append(textNode.getNodeValue());		
+					}else{
+						bf.append("");
+					}
+					
+				}
+			} 
+		}
+		
+		String result = bf.toString();
+		
+	    return result;
+	}
 	
 	private void log(String text){
 		log.append(text+"\n");
-		
+		System.out.println(text);
 	}
 
 }
