@@ -1,4 +1,5 @@
 Project Overview
+================
 
 A small Swing-based Java tool which allows you to select a folder with xml documents and get them all 
 serialized and flattened to a result file in comma-separated format. The XML tag names in the XML documents 
