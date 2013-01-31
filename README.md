@@ -1,0 +1,7 @@
+Project Overview
+================
+
+A small Swing-based Java tool which allows you to select a folder with xml documents and get them all 
+serialized and flattened to a result file in comma-separated format. The XML tag names in the XML documents 
+are retrieved and added as first row in the csv file and can therefore be reused as column names in Excel. 
+The project was created to allow easy import of many XML docs of the same type in one worksheet in Excel.
