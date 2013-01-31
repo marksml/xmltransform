@@ -1,4 +1,3 @@
-
 <div class="markdown-body">
       <p>
       <a href="https://travis-ci.org/marksml/xmltransform"><img style="max-width:100%;" alt="Build Status" 
@@ -18,3 +17,9 @@ The project was created to allow easy import of many XML docs of the same type i
 </p>
 
 </div>
+
+<h1>Downloads</h1>
+
+<a href="https://github.com/marksml/xmltransform/blob/master/releases/xmlTransform_0.1.jar?raw=true">XmlTransform Version 0.1</a>
+
+
