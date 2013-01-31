@@ -1,17 +1,31 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="create_run_jar" name="Create Runnable Jar for Project xmltransform with Jar-in-Jar Loader">
-    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
-    <!--ANT 1.7 is required                                        -->
-    <target name="create_run_jar">
-        <jar destfile="/home/marksml/Dropbox/git/xmltransform/build/XmlTransform.jar">
-            <manifest>
-                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
-                <attribute name="Rsrc-Main-Class" value="org.ch.mm.xmltransform.Main"/>
-                <attribute name="Class-Path" value="."/>
-                <attribute name="Rsrc-Class-Path" value="./"/>
-            </manifest>
-            <zipfileset src="jar-in-jar-loader.zip"/>
-            <fileset dir="/home/marksml/Dropbox/git/xmltransform/bin"/>
-        </jar>
-    </target>
+<?xml version="1.0"?>
+<project name="xmltransform" default="build" basedir=".">
+	
+	<description>mmarks</description>
+	<property name="baseDir" value="."/>
+	<property name="distDir" value="${baseDir}/dist" />
+	<property name="buildDir" value="${baseDir}/classes" />
+	<property name="srcDir" value="${baseDir}/src" />
+	
+	<target name="clean">
+	  <delete dir="${buildDir}"/>
+	  <delete dir="${distDir}"/>
+	</target>	
+	
+	<target name="compile" depends="clean">
+	  <mkdir dir="${buildDir}"/>
+    <javac srcdir="${srcDir}" destdir="${buildDir}" debug="on" source="1.5" />
+	</target>	
+
+  <target name="build" depends="compile">  
+    <mkdir dir="${distDir}"/>
+    <jar destfile="${distDir}/xmlTransform.jar">
+    <fileset dir="${buildDir}"/>
+    <manifest>
+      <attribute name="Main-Class" value="org.ch.mm.xmltransform.Main"/>
+    </manifest>
+  </jar>
+  </target>
+	
+	
 </project>
