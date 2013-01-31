@@ -2,6 +2,6 @@ language: java
 jdk:
   - openjdk6
 
-script: "ant"
+script: "ant build"
 
 
