@@ -18,8 +18,5 @@ The project was created to allow easy import of many XML docs of the same type i
 
 </div>
 
-<h1>Downloads</h1>
-
-<a href="https://github.com/marksml/xmltransform/blob/master/releases/xmlTransform_0.1.jar?raw=true">XmlTransform Version 0.1</a>
-
+Project homepage: <a href="http://marksml.github.com/xmltransform/">http://marksml.github.com/xmltransform/</a>
 
