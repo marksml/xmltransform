@@ -2,6 +2,13 @@ language: java
 jdk:
   - openjdk6
 
-script: "ant"
+script: "ant build"
+
+notifications:
+  email:
+    recipients:
+      - info.marks@gmx.de
+    on_success: [always|never|change] # default: always
+    on_failure: [always|never|change] # default: always
 
 
