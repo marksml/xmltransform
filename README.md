@@ -6,5 +6,4 @@ serialized and flattened to a result file in comma-separated format. The XML tag
 are retrieved and added as first row in the csv file and can therefore be reused as column names in Excel. 
 The project was created to allow easy import of many XML docs of the same type in one worksheet in Excel.
 
-Travis CI - build status: 
-"!https://travis-ci.org/marksml/xmltransform.png!":https://travis-ci.org/marksml/xmltransform
+Travis CI - build status: https://travis-ci.org/marksml/xmltransform.png
