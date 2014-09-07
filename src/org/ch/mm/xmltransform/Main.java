@@ -15,6 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EtchedBorder;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -49,7 +51,23 @@ public class Main implements ActionListener {
 		Main main = new Main();
 		main.start();
 		
+		
 	}
+	
+	public void setLookAndFeel(){
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	private File selectSourceFolder(){
 		
@@ -67,7 +85,7 @@ public class Main implements ActionListener {
 	}
 	
 	public void start(){
-		
+		setLookAndFeel();
 		JFrame frame = new JFrame("XmlTransform");
 		frame.setSize(width, height);
 		
@@ -117,7 +135,12 @@ public class Main implements ActionListener {
 		
 		if(CMD_SELECT_SRC_FOLDER.equals(cmd)){
 			srcFolder = selectSourceFolder();
-			log("\nGewähltes Quellverzeichnis: "+ srcFolder.getAbsolutePath());
+			try{ 
+				log("\nGewähltes Quellverzeichnis: "+ srcFolder.getAbsolutePath()); //This was throwing an error if you chose to cancel choosing a file directory
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}
+			
 			
 			//resetting columnNames;
 			columnNames = null;
