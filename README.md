@@ -18,7 +18,6 @@ The project was created to allow easy import of many XML docs of the same type i
 
 <p>Test</p>
 
-
 </div>
 
 Project homepage: <a href="http://marksml.github.com/xmltransform/">http://marksml.github.com/xmltransform/</a>
