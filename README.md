@@ -20,5 +20,5 @@ The project was created to allow easy import of many XML docs of the same type i
 
 </div>
 
-Project homepage: <a href="http://marksml.github.com/xmltransform/">http://marksml.github.com/xmltransform/</a>
+Project homepage: <a href="http://marksml.github.io/xmltransform/">http://marksml.github.io/xmltransform/</a>
 
